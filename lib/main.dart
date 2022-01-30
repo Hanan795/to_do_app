@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.teal,
         // backgroundColor: ,
       ),
-      home: const NotificationScreen(payLoad: 'hi'),
+      home: const NotificationScreen(payLoad: 'Title|Description|Date'),
     );
   }
 }

@@ -12,10 +12,9 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  String _payLoad = '';
-
   @override
   Widget build(BuildContext context) {
+    String _payLoad = widget.payLoad;
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
@@ -33,24 +32,131 @@ class _NotificationScreenState extends State<NotificationScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Text(
-              'Hello, Hanan',
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.w900,
-                color: Get.isDarkMode ? Colors.white : darkGreyClr,
+            const SizedBox(
+              height: 20,
+            ),
+            Column(
+              children: [
+                Text(
+                  'Hello, Hanan',
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w900,
+                    color: Get.isDarkMode ? Colors.white : darkGreyClr,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'You have a new reminder',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w300,
+                    color: Get.isDarkMode ? Colors.grey[100] : darkGreyClr,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0, vertical: 10.0),
+                margin: const EdgeInsets.symmetric(horizontal: 30.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: primaryClr,
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: const [
+                          Icon(
+                            Icons.text_format,
+                            size: 35,
+                            color: white,
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            'Title',
+                            style: TextStyle(color: white, fontSize: 30),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        _payLoad.toString().split('|')[0],
+                        style: const TextStyle(color: white, fontSize: 20),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: const [
+                          Icon(
+                            Icons.description,
+                            size: 35,
+                            color: white,
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            'Description',
+                            style: TextStyle(color: white, fontSize: 30),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        _payLoad.toString().split('|')[1],
+                        textAlign: TextAlign.justify,
+                        style: const TextStyle(color: white, fontSize: 20),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: const [
+                          Icon(
+                            Icons.calendar_today_outlined,
+                            size: 35,
+                            color: white,
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            'Date',
+                            style: TextStyle(color: white, fontSize: 30),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        _payLoad.toString().split('|')[2],
+                        style: const TextStyle(color: white, fontSize: 20),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
             const SizedBox(
-              height: 10,
-            ),
-            Text(
-              'You have a new reminder',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w300,
-                color: Get.isDarkMode ? Colors.grey[100] : darkGreyClr,
-              ),
+              height: 20,
             ),
           ],
         ),
