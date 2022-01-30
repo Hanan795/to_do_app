@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:get/route_manager.dart';
 import 'ui/pages/home_page.dart';
+import 'ui/pages/notification_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,10 +12,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      theme: ThemeData(
+        primaryColor: Colors.teal,
+        // backgroundColor: ,
+      ),
+      home: const NotificationScreen(payLoad: 'hi'),
     );
   }
 }
