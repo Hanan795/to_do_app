@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -36,6 +34,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.theme.backgroundColor,
       appBar: _appBar(),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
