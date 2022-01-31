@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/services/theme_services.dart';
+import 'package:to_do_app/ui/pages/add_task_page.dart';
 import 'package:to_do_app/ui/pages/notification_screen.dart';
 import 'package:to_do_app/ui/size_config.dart';
 import 'package:to_do_app/ui/widgets/button.dart';
@@ -33,7 +34,9 @@ class _HomePageState extends State<HomePage> {
             children: [
               MyButton(
                 label: 'Add Task',
-                onTap: () {},
+                onTap: () {
+                  Get.to(const AddTaskPage());
+                },
               ),
               const InputField(
                 title: 'title',
