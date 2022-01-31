@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -34,7 +36,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: _appBar(),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: SingleChildScrollView(
@@ -198,6 +200,28 @@ class _AddTaskPageState extends State<AddTaskPage> {
       ),
     );
   }
+
+  AppBar _appBar() => AppBar(
+        elevation: 0,
+        backgroundColor: context.theme.backgroundColor,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            size: 24,
+            color: primaryClr,
+          ),
+          onPressed: () => Get.back(),
+        ),
+        actions: const [
+          CircleAvatar(
+            radius: 18,
+            backgroundImage: AssetImage('assets/images/person.jpeg'),
+          ),
+          SizedBox(
+            width: 20,
+          )
+        ],
+      );
 
   Column _colorPalette() {
     return Column(
