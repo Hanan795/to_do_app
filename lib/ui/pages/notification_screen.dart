@@ -16,19 +16,28 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     String _payLoad = widget.payLoad;
     return Scaffold(
+      backgroundColor: context.theme.backgroundColor,
       appBar: AppBar(
-          elevation: 0,
-          title: Text(
-            _payLoad.toString().split('|')[0],
-            style: TextStyle(
-              color: Get.isDarkMode ? Colors.white : darkGreyClr,
-            ),
+        elevation: 0,
+        backgroundColor: context.theme.backgroundColor,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            size: 24,
+            color: primaryClr,
           ),
-          backgroundColor: context.theme.backgroundColor,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Get.back(),
-          )),
+          onPressed: () => Get.back(),
+        ),
+        actions: const [
+          CircleAvatar(
+            radius: 18,
+            backgroundImage: AssetImage('assets/images/person.jpeg'),
+          ),
+          SizedBox(
+            width: 20,
+          )
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
