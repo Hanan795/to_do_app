@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:to_do_app/controllers/task_controller.dart';
 import 'package:to_do_app/services/theme_services.dart';
 import 'package:to_do_app/ui/pages/add_task_page.dart';
 import 'package:to_do_app/ui/size_config.dart';
 import 'package:to_do_app/ui/theme.dart';
 import 'package:to_do_app/ui/widgets/button.dart';
-import 'package:to_do_app/ui/widgets/input_field.dart';
 
 import '../theme.dart';
 
@@ -17,6 +18,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final TaskController _taskController = Get.put(TaskController());
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -24,22 +27,14 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: context.theme.backgroundColor,
       appBar: _appBar(context),
       body: SingleChildScrollView(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              MyButton(
-                label: 'Add Task',
-                onTap: () {
-                  Get.to(const AddTaskPage());
-                },
-              ),
-              const InputField(
-                title: 'title',
-                hint: 'note',
-                widget: Icon(Icons.access_alarm),
-              )
-            ]),
+        child: Column(children: [
+          _addTaskBar(),
+          // _addDateBar(),
+          const SizedBox(
+            height: 6.0,
+          ),
+          // _showTasks()
+        ]),
       ),
     );
   }
@@ -71,4 +66,42 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
+
+  _addTaskBar() {
+    return Container(
+        margin: const EdgeInsets.only(
+          left: 20.0,
+          right: 10.0,
+          top: 10.0,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  DateFormat.yMMMMd().format(DateTime.now()),
+                  style: Themes().headingStyle,
+                ),
+                Text(
+                  'Today',
+                  style: Themes().subHeadingStyle,
+                )
+              ],
+            ),
+            MyButton(
+              label: '+ Add Task',
+              onTap: () async {
+                await Get.to(const AddTaskPage());
+                _taskController.getTasks();
+              },
+            )
+          ],
+        ));
+  }
+
+  _addDateBar() {}
+
+  _showTasks() {}
 }
