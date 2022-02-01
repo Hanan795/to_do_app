@@ -1,5 +1,7 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -36,7 +38,7 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(
             height: 6.0,
           ),
-          // _showTasks()
+          _showTasks()
         ]),
       ),
     );
@@ -132,5 +134,66 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _showTasks() {}
+  _showTasks() {
+    // return Expanded(child: Obx(() {
+    //   if (_taskController.taskList.isEmpty) {
+    //     return _noTaskMsg();
+    //   } else {
+    //     return Container();
+    //   }
+    // }));
+    return
+        // Expanded(child:
+        _noTaskMsg();
+  }
+
+  _noTaskMsg() {
+    return Stack(
+      children: [
+        AnimatedPositioned(
+          duration: const Duration(milliseconds: 2000),
+          child: SingleChildScrollView(
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              direction: SizeConfig.orientation == Orientation.landscape
+                  ? Axis.horizontal
+                  : Axis.vertical,
+              children: [
+                SizeConfig.orientation == Orientation.landscape
+                    ? const SizedBox(
+                        height: 6.0,
+                      )
+                    : const SizedBox(
+                        height: 220.0,
+                      ),
+                SvgPicture.asset(
+                  'assets/images/task.svg',
+                  color: primaryClr.withOpacity(0.5),
+                  height: 90.0,
+                  semanticsLabel: 'Task',
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 30.0, vertical: 10.0),
+                  child: Text(
+                    'You don\'t have any tasks yet.\nAdd new tasks to make your days productive.',
+                    style: Themes().subTitleStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizeConfig.orientation == Orientation.landscape
+                    ? const SizedBox(
+                        height: 120.0,
+                      )
+                    : const SizedBox(
+                        height: 180.0,
+                      ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
