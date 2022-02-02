@@ -1,11 +1,11 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:to_do_app/controllers/task_controller.dart';
+import 'package:to_do_app/services/notification_services.dart';
 import 'package:to_do_app/services/theme_services.dart';
 import 'package:to_do_app/ui/pages/add_task_page.dart';
 import 'package:to_do_app/ui/size_config.dart';
@@ -24,6 +24,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TaskController _taskController = Get.put(TaskController());
   DateTime _selectedDate = DateTime.now();
+  late NotifyHelper notifyHelper;
+
+  @override
+  void initState() {
+    notifyHelper = NotifyHelper();
+    notifyHelper.initializationNotification();
+    // notifyHelper.requestLinuxPermission();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +65,10 @@ class _HomePageState extends State<HomePage> {
         ),
         onPressed: () {
           ThemeServices().swithTheme();
+          notifyHelper.displayNotification(
+              title: 'Theme Changed!',
+              body: 'You switched th theme ofthe app now.');
+          notifyHelper.ScheduledNotification();
         },
       ),
       elevation: 0,
