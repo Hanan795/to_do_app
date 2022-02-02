@@ -5,12 +5,14 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:to_do_app/controllers/task_controller.dart';
+import 'package:to_do_app/models/task.dart';
 import 'package:to_do_app/services/notification_services.dart';
 import 'package:to_do_app/services/theme_services.dart';
 import 'package:to_do_app/ui/pages/add_task_page.dart';
 import 'package:to_do_app/ui/size_config.dart';
 import 'package:to_do_app/ui/theme.dart';
 import 'package:to_do_app/ui/widgets/button.dart';
+import 'package:to_do_app/ui/widgets/task_tile.dart';
 
 import '../theme.dart';
 
@@ -47,7 +49,7 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(
             height: 6.0,
           ),
-          _showTasks()
+          _showTasks(),
         ]),
       ),
     );
@@ -155,9 +157,22 @@ class _HomePageState extends State<HomePage> {
     //     return Container();
     //   }
     // }));
-    return
-        // Expanded(child:
-        _noTaskMsg();
+    // return
+    // Expanded(child:
+    // _noTaskMsg();
+    return TaskTile(
+      task: Task(
+        id: 1,
+        title: 'Title 1',
+        note: 'Note Something',
+        isCompleted: 1,
+        startTime: '20:15',
+        endTime: '05:30',
+        color: 0,
+        remind: 0,
+        repeat: '',
+      ),
+    );
   }
 
   _noTaskMsg() {
