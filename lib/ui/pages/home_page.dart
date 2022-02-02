@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     notifyHelper = NotifyHelper();
-    notifyHelper.initializationNotification();
+    notifyHelper.initializeNotification();
     // notifyHelper.requestLinuxPermission();
     super.initState();
   }
@@ -66,10 +66,6 @@ class _HomePageState extends State<HomePage> {
         ),
         onPressed: () {
           ThemeServices().swithTheme();
-          notifyHelper.displayNotification(
-              title: 'Theme Changed!',
-              body: 'You switched th theme ofthe app now.');
-          notifyHelper.ScheduledNotification();
         },
       ),
       elevation: 0,
@@ -165,6 +161,19 @@ class _HomePageState extends State<HomePage> {
               : Axis.vertical,
           itemBuilder: (BuildContext context, int index) {
             Task task = _taskController.taskList[index];
+
+            var hour = task.startTime.toString().split(':')[0];
+            var minutes = task.startTime.toString().split(':')[1];
+
+            var date = DateFormat.jm().parse(task.startTime!);
+            var taskTime = DateFormat('HH:mm').format(date);
+
+            notifyHelper.scheduledNotification(
+              int.parse(taskTime.toString().split(':')[0]),
+              int.parse(taskTime.toString().split(':')[1]),
+              task,
+            );
+
             return AnimationConfiguration.staggeredList(
               position: index,
               duration: const Duration(milliseconds: 1000),
