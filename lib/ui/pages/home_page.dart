@@ -1,5 +1,6 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,16 +43,14 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: context.theme.backgroundColor,
       appBar: _appBar(context),
-      body: SingleChildScrollView(
-        child: Column(children: [
-          _addTaskBar(),
-          _addDateBar(),
-          const SizedBox(
-            height: 6.0,
-          ),
-          _showTasks(),
-        ]),
-      ),
+      body: Column(children: [
+        _addTaskBar(),
+        _addDateBar(),
+        const SizedBox(
+          height: 6.0,
+        ),
+        _showTasks(),
+      ]),
     );
   }
 
@@ -157,36 +156,31 @@ class _HomePageState extends State<HomePage> {
     //     return Container();
     //   }
     // }));
-    // return
-    // Expanded(child:
-    // _noTaskMsg();
-    return GestureDetector(
-      onTap: () => _showBottomSheet(
-          context,
-          Task(
-            id: 1,
-            title: 'Title 1',
-            note: 'Note Something',
-            isCompleted: 0,
-            startTime: '20:15',
-            endTime: '05:30',
-            color: 0,
-            remind: 0,
-            repeat: '',
-          )),
-      child: TaskTile(
-        task: Task(
-          id: 1,
-          title: 'Title 1',
-          note: 'Note Something',
-          isCompleted: 0,
-          startTime: '20:15',
-          endTime: '05:30',
-          color: 0,
-          remind: 0,
-          repeat: '',
-        ),
-      ),
+
+    return Expanded(
+      child: ListView.builder(
+          itemCount: _taskController.taskList.length,
+          scrollDirection: SizeConfig.orientation == Orientation.landscape
+              ? Axis.horizontal
+              : Axis.vertical,
+          itemBuilder: (BuildContext context, int index) {
+            Task task = _taskController.taskList[index];
+            return AnimationConfiguration.staggeredList(
+              position: index,
+              duration: const Duration(milliseconds: 1000),
+              child: SlideAnimation(
+                horizontalOffset: 300,
+                child: FadeInAnimation(
+                  child: GestureDetector(
+                    onTap: () => _showBottomSheet(context, task),
+                    child: TaskTile(
+                      task: task,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
     );
   }
 
