@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -22,7 +22,6 @@ class NotifyHelper {
     tz.initializeTimeZones();
     _configureSelectNotificationSubject();
     await _configureLocalTimeZone();
-    // await requestIOSPermissions(flutterLocalNotificationsPlugin);
     final IOSInitializationSettings initializationSettingsIOS =
         IOSInitializationSettings(
       requestSoundPermission: false,
@@ -58,11 +57,13 @@ class NotifyHelper {
   displayNotification({required String title, required String body}) async {
     print('doing test');
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
-        'your channel id', 'your channel name',
-        channelDescription: 'your channel description',
-        ticker: 'ticker',
-        importance: Importance.max,
-        priority: Priority.high);
+      'your channel id',
+      'your channel name',
+      channelDescription: 'your channel description',
+      ticker: 'ticker',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
     var iOSPlatformChannelSpecifics = const IOSNotificationDetails();
     var linuxPlatformChannelSpecifics = const LinuxNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
@@ -78,19 +79,30 @@ class NotifyHelper {
     );
   }
 
+  cancelNotification(Task task) async {
+    await flutterLocalNotificationsPlugin.cancel(task.id!);
+  }
+
+  cancelAllNotification() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
+  }
+
   scheduledNotification(int hour, int minutes, Task task) async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      task.id?? 0,
+      task.id ?? 0,
       task.title,
       task.note,
       //tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
-      _nextInstanceOfTenAM(hour, minutes),
+      _nextInstanceOfTenAM(
+          hour, minutes, task.remind!, task.repeat!, task.date!),
       const NotificationDetails(
         iOS: IOSNotificationDetails(),
         linux: LinuxNotificationDetails(),
         android: AndroidNotificationDetails(
-            'your channel id', 'your channel name',
-            channelDescription: 'your channel description'),
+          'your channel id',
+          'your channel name',
+          channelDescription: 'your channel description',
+        ),
       ),
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
@@ -100,12 +112,53 @@ class NotifyHelper {
     );
   }
 
-  tz.TZDateTime _nextInstanceOfTenAM(int hour, int minutes) {
+  tz.TZDateTime _nextInstanceOfTenAM(
+      int hour, int minutes, int remind, String repeat, String date) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    var formattedDate = DateFormat.yMd().parse(date);
+    final tz.TZDateTime fd = tz.TZDateTime.from(formattedDate, tz.local);
+    print(now);
+    print(fd);
     tz.TZDateTime scheduledDate =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minutes);
+        tz.TZDateTime(tz.local, fd.year, fd.month, fd.day, hour, minutes);
+
+    scheduledDate = afterRemind(remind, scheduledDate);
+
     if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
+      if (repeat == 'Daily') {
+        scheduledDate = tz.TZDateTime(tz.local, now.year, now.month,
+            formattedDate.day + 1, hour, minutes);
+      }
+      if (repeat == 'Weekly') {
+        scheduledDate = tz.TZDateTime(tz.local, now.year, now.month,
+            formattedDate.day + 7, hour, minutes);
+      }
+      if (repeat == 'Monthly') {
+        scheduledDate = tz.TZDateTime(tz.local, now.year,
+            formattedDate.month + 1, formattedDate.day, hour, minutes);
+      }
+      scheduledDate = afterRemind(remind, scheduledDate);
+    }
+
+    print('next scheduledDate = $scheduledDate');
+    return scheduledDate;
+  }
+
+  tz.TZDateTime afterRemind(int remind, tz.TZDateTime scheduledDate) {
+    if (remind == 5) {
+      scheduledDate = scheduledDate.subtract(const Duration(minutes: 5));
+    }
+
+    if (remind == 10) {
+      scheduledDate = scheduledDate.subtract(const Duration(minutes: 10));
+    }
+
+    if (remind == 15) {
+      scheduledDate = scheduledDate.subtract(const Duration(minutes: 15));
+    }
+
+    if (remind == 20) {
+      scheduledDate = scheduledDate.subtract(const Duration(minutes: 20));
     }
     return scheduledDate;
   }
@@ -127,44 +180,9 @@ class NotifyHelper {
     tz.setLocalLocation(tz.getLocation(timeZoneName));
   }
 
-/*   Future selectNotification(String? payload) async {
-    if (payload != null) {
-      //selectedNotificationPayload = "The best";
-      selectNotificationSubject.add(payload);
-      print('notification payload: $payload');
-    } else {
-      print("Notification Done");
-    }
-    Get.to(() => SecondScreen(selectedNotificationPayload));
-  } */
-
 //Older IOS
   Future onDidReceiveLocalNotification(
       int id, String? title, String? body, String? payload) async {
-    // display a dialog with the notification details, tap ok to go to another page
-    /* showDialog(
-      context: context,
-      builder: (BuildContext context) => CupertinoAlertDialog(
-        title: const Text('Title'),
-        content: const Text('Body'),
-        actions: [
-          CupertinoDialogAction(
-            isDefaultAction: true,
-            child: const Text('Ok'),
-            onPressed: () async {
-              Navigator.of(context, rootNavigator: true).pop();
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Container(color: Colors.white),
-                ),
-              );
-            },
-          )
-        ],
-      ),
-    ); 
- */
     Get.dialog(Text(body!));
   }
 
