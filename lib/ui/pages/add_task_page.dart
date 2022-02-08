@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:to_do_app/controllers/task_controller.dart';
+import 'package:to_do_app/models/task.dart';
 import 'package:to_do_app/ui/widgets/button.dart';
 import 'package:to_do_app/ui/widgets/input_field.dart';
 
@@ -188,7 +189,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   MyButton(
                     label: 'Create Task',
                     onTap: () {
-                      Get.back();
+                      _validateData();
                     },
                   )
                 ],
@@ -221,6 +222,40 @@ class _AddTaskPageState extends State<AddTaskPage> {
           )
         ],
       );
+
+  _addTaskToDb() async {
+    int value = await _taskController.addTask(
+        task: Task(
+            title: _titleController.text,
+            note: _noteController.text,
+            isCompleted: 0,
+            date: DateFormat.yMd().format(_selectedTime),
+            startTime: _startTime,
+            endTime: _endTime,
+            color: _selectedColor,
+            remind: _selectedRemind,
+            repeat: _selectedRepeat));
+  }
+
+  _validateData() {
+    if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
+      _addTaskToDb();
+      Get.back();
+    } else if (_titleController.text.isNotEmpty ||
+        _noteController.text.isNotEmpty) {
+      Get.snackbar(
+          'Some fields are required!', 'Please fill the required fields.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.white,
+          colorText: pinkClr,
+          icon: const Icon(
+            Icons.warning_amber,
+            color: Colors.red,
+          ));
+    } else {
+      print('### SOMETHING BAD HAPPENED ###');
+    }
+  }
 
   Column _colorPalette() {
     return Column(
