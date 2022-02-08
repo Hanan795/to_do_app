@@ -60,7 +60,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 title: 'Date',
                 hint: DateFormat.yMd().format(DateTime.now()),
                 widget: IconButton(
-                  onPressed: () {},
+                  onPressed: () => _getDateFromUser(),
                   icon: const Icon(
                     Icons.calendar_today_outlined,
                     color: Colors.grey,
@@ -74,7 +74,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       title: 'Start Time',
                       hint: _startTime,
                       widget: IconButton(
-                        onPressed: () {},
+                        onPressed: () => _getTimeFromUser(isStartTime: true),
                         icon: const Icon(
                           Icons.access_time_rounded,
                           color: Colors.grey,
@@ -90,7 +90,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       title: 'End Time',
                       hint: _endTime,
                       widget: IconButton(
-                        onPressed: () {},
+                        onPressed: () => _getTimeFromUser(isStartTime: false),
                         icon: const Icon(
                           Icons.access_time_rounded,
                           color: Colors.grey,
@@ -298,5 +298,35 @@ class _AddTaskPageState extends State<AddTaskPage> {
         ))
       ],
     );
+  }
+
+  _getTimeFromUser({required bool isStartTime}) async {
+    TimeOfDay? _pickedTime = await showTimePicker(
+      context: context,
+      initialTime: isStartTime
+          ? TimeOfDay.fromDateTime(DateTime.now())
+          : TimeOfDay.fromDateTime(
+              DateTime.now().add(const Duration(minutes: 15))),
+    );
+    String _formattedTime = _pickedTime!.format(context);
+
+    if (isStartTime)
+      setState(() => _startTime = _formattedTime);
+    else if (!isStartTime)
+      setState(() => _endTime = _formattedTime);
+    else
+      print('time cancelled or sonething wrong');
+  }
+
+  _getDateFromUser() async {
+    DateTime? _pickedDate = await showDatePicker(
+        context: context,
+        initialDate: _selectedTime,
+        firstDate: DateTime(2015),
+        lastDate: DateTime(2030));
+    if (_pickedDate != null)
+      setState(() => _selectedTime = _pickedDate);
+    else
+      print('It\'s null or something error');
   }
 }
