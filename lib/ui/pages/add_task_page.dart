@@ -58,7 +58,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
               ),
               InputField(
                 title: 'Date',
-                hint: DateFormat.yMd().format(DateTime.now()),
+                hint: DateFormat.yMd().format(_selectedTime),
                 widget: IconButton(
                   onPressed: () => _getDateFromUser(),
                   icon: const Icon(
@@ -321,12 +321,13 @@ class _AddTaskPageState extends State<AddTaskPage> {
   _getDateFromUser() async {
     DateTime? _pickedDate = await showDatePicker(
         context: context,
-        initialDate: _selectedTime,
+        initialDate: DateTime.now(),
         firstDate: DateTime(2015),
         lastDate: DateTime(2030));
-    if (_pickedDate != null)
+    if (_pickedDate != null) {
       setState(() => _selectedTime = _pickedDate);
-    else
+      print('hhhh $_pickedDate');
+    } else
       print('It\'s null or something error');
   }
 }

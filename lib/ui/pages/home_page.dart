@@ -34,7 +34,6 @@ class _HomePageState extends State<HomePage> {
     notifyHelper = NotifyHelper();
     notifyHelper.initializeNotification();
     _taskController.getTasks();
-    // notifyHelper.requestLinuxPermission();
     super.initState();
   }
 
@@ -71,12 +70,23 @@ class _HomePageState extends State<HomePage> {
       ),
       elevation: 0,
       backgroundColor: context.theme.backgroundColor,
-      actions: const [
-        CircleAvatar(
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.cleaning_services_outlined,
+            size: 24,
+            color: Get.isDarkMode ? white : darkGreyClr,
+          ),
+          onPressed: () {
+            notifyHelper.cancelAllNotification();
+            _taskController.deleteAllTasks();
+          },
+        ),
+        const CircleAvatar(
           radius: 18,
           backgroundImage: AssetImage('assets/images/person.jpeg'),
         ),
-        SizedBox(
+        const SizedBox(
           width: 20,
         )
       ],
@@ -325,6 +335,7 @@ class _HomePageState extends State<HomePage> {
                 : _buildBottomSheet(
                     label: 'Task Completed',
                     onTap: () {
+                      notifyHelper.cancelNotification(task);
                       _taskController.markAsCompleted(task.id!);
                       Get.back();
                     },
@@ -332,6 +343,7 @@ class _HomePageState extends State<HomePage> {
             _buildBottomSheet(
                 label: 'Delete Task',
                 onTap: () {
+                  notifyHelper.cancelNotification(task);
                   _taskController.deleteTask(task: task);
                   Get.back();
                 },
