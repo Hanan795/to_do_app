@@ -335,7 +335,7 @@ class _HomePageState extends State<HomePage> {
                   _taskController.deleteTask(task: task);
                   Get.back();
                 },
-                clr: primaryClr),
+                clr: Colors.red[300]!),
             Divider(
               color: Get.isDarkMode ? Colors.grey : darkGreyClr,
             ),
@@ -344,7 +344,7 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   Get.back();
                 },
-                clr: Colors.red[300]!),
+                clr: primaryClr),
             const SizedBox(height: 20.0),
           ],
         ),
