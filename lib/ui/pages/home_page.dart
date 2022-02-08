@@ -164,10 +164,17 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (BuildContext context, int index) {
                 Task task = _taskController.taskList[index];
                 if (task.date == DateFormat.yMd().format(_selectedDate) ||
-                    task.repeat == 'Daily') {
-                  var hour = task.startTime.toString().split(':')[0];
-                  var minutes = task.startTime.toString().split(':')[1];
-
+                    task.repeat == 'Daily' ||
+                    task.repeat == 'Weekly' &&
+                        _selectedDate
+                                    .difference(
+                                        DateFormat.yMd().parse(task.date!))
+                                    .inDays %
+                                7 ==
+                            0 ||
+                    task.repeat == 'Monthly' &&
+                        _selectedDate.day ==
+                            DateFormat.yMd().parse(task.date!).day) {
                   var date = DateFormat.jm().parse(task.startTime!);
                   var taskTime = DateFormat('HH:mm').format(date);
 
@@ -337,7 +344,7 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   Get.back();
                 },
-                clr: primaryClr),
+                clr: Colors.red[300]!),
             const SizedBox(height: 20.0),
           ],
         ),
