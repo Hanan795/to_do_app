@@ -21,10 +21,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
         elevation: 0,
         backgroundColor: context.theme.backgroundColor,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back,
             size: 24,
-            color: primaryClr,
+            color: Get.isDarkMode ? white : darkGreyClr,
           ),
           onPressed: () => Get.back(),
         ),
